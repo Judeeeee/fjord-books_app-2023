@@ -9,6 +9,20 @@ class ReportsController < ApplicationController
 
   def show
     @report = Report.find(params[:id])
+
+    # 言及元のレポートのリンク存在チェック
+    # 本文にリンクがあればその組みを中間テーブルに保存する
+    if @reports.content.include?('言及先リンク')
+      mentioned_report = request.url
+      mentioning_report = '言及先リンク'
+      Mentions.create!(mentioned_report, mentioning_report)
+    end
+
+    # 言及先のチェック
+    # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
+    if Mention.find('言及元')
+      @mentioned_reports = Mention.where(mentioned_report_id: '言及元')
+    end
   end
 
   # GET /reports/new
