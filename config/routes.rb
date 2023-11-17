@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  get 'mentions/create'
-  get 'mentions/destroy'
+  post 'mentions/create' => 'meitons#create'
+  get 'mentions/destroy'=> 'meitons#destroy'
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   devise_for :users
   root to: 'books#index'
