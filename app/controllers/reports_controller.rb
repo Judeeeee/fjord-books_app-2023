@@ -16,14 +16,15 @@ class ReportsController < ApplicationController
     if mentioning_reports.any?
       mentioned_report = params[:id].to_i
       mentioning_reports.each do |mentioning_report|
-        Mentions.create(mentioned_report_id: mentioned_report, mentioning_report_id: mentioning_report)
+        mention =  Mention.new(mentioned_report_id: mentioned_report, mentioning_report_id: mentioning_report)
+        mention.save
       end
     end
 
     # # 言及先のチェック
     # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
-    if Mention.find('言及元')
-      @mentioned_reports = Mention.where(mentioned_report_id: '言及元')
+    if Mention.where(mentioning_report_id: mentioned_report)
+      @mentioned_reports = Mention.where(mentioned_report_id: mentioned_report)
     end
   end
 

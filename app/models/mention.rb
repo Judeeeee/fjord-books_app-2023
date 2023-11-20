@@ -1,5 +1,4 @@
 class Mention < ApplicationRecord
-  belongs_to :mentioned
-  belongs_to :mentioning
+  has_many :reports
   validates_uniqueness_of :mentioned_report_id, scope: :mentioning_report_id
 end
