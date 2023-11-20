@@ -27,9 +27,15 @@ class Report < ApplicationRecord
     # 両配列を比較して、重複していないものを取得する。(引き算で取得できる。)
     # idを取得して、Mention.deteteする。
 
-    if  Mention.where(mentioned_report_id: @report.id, mentioning_report_id: @report.id).size > @report.mentioning.size
-      deletable_item = Mention.where(mentioned_report_id: @report.id, mentioning_report_id: @report.id).size - @report.mentioning
-      Mention.delete(deletable_item.id)
+    if  Mention.where(mentioned_report_id: @report.id).size > @report.mentioning.size
+      # 中間テーブルに保存されているレコードから言及先の日報IDを取得する。
+      db_ids = Mention.where(mentioned_report_id: @report.id).map{|mention| mentoin.mentioning_report_id}
+      deletable_items = db_ids - @report.mentioning
+      # 結局idの情報だけ欲しいので、クラスインスタンスである必要はない。
+      deletable_items each do |deletable_item|
+        foo = Mention.where(mentioned_report_id: @report.id, mentioning_report_id: deletable_item).id
+        Mention.delete(foo)
+      end
     end
   end
 end
