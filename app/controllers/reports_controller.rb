@@ -9,22 +9,21 @@ class ReportsController < ApplicationController
 
   def show
     @report = Report.find(params[:id])
-    report_links = @report.content.scan(/http:\/\/localhost:3000\/reports\/(\d+)|^params[:id]/)
-    mentioning_reports = report_links.flatten.map(&:to_i)
+    mentioning_reports = @report.mentioning
+
     # # 言及元のレポートのリンク存在チェック
     # # 本文にリンクがあればその組みを中間テーブルに保存する
-    mentioned_report = params[:id].to_i
     if mentioning_reports.any?
       mentioning_reports.each do |mentioning_report|
-        mention =  Mention.new(mentioned_report_id: mentioned_report, mentioning_report_id: mentioning_report)
+        mention =  Mention.new(mentioned_report_id: @report.id, mentioning_report_id: mentioning_report)
         mention.save
       end
     end
 
     # # 言及先のチェック
     # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
-    if Mention.where(mentioning_report_id: mentioned_report)
-      @mentioned_reports = Mention.where(mentioning_report_id: mentioned_report)
+    if Mention.where(mentioning_report_id: @report.id)
+      @mentioned_reports = Mention.where(mentioning_report_id: @report.id)
     end
   end
 
@@ -37,7 +36,6 @@ class ReportsController < ApplicationController
 
   def create
     @report = current_user.reports.new(report_params)
-    binding.irb
     if @report.save
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
@@ -46,6 +44,8 @@ class ReportsController < ApplicationController
   end
 
   def update
+    Report.delete_relationship
+
     if @report.update(report_params)
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
     else

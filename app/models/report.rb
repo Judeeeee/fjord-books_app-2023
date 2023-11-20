@@ -16,4 +16,20 @@ class Report < ApplicationRecord
   def created_on
     created_at.to_date
   end
+
+  def mentioning
+    report_links = self.content.scan(/http:\/\/localhost:3000\/reports\/(\d+)|^params[:id]/)
+    report_links.flatten.map(&:to_i)
+  end
+
+  def delete_relationship
+    # 更新 => 日報リンク一覧取得 => テーブルのレコードと一覧を比較 => (データ数が減っていたら)削除
+    # 両配列を比較して、重複していないものを取得する。(引き算で取得できる。)
+    # idを取得して、Mention.deteteする。
+
+    if  Mention.where(mentioned_report_id: @report.id, mentioning_report_id: @report.id).size > @report.mentioning.size
+      deletable_item = Mention.where(mentioned_report_id: @report.id, mentioning_report_id: @report.id).size - @report.mentioning
+      Mention.delete(deletable_item.id)
+    end
+  end
 end
