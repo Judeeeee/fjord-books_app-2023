@@ -13,8 +13,8 @@ class ReportsController < ApplicationController
     mentioning_reports = report_links.flatten.map(&:to_i)
     # # 言及元のレポートのリンク存在チェック
     # # 本文にリンクがあればその組みを中間テーブルに保存する
+    mentioned_report = params[:id].to_i
     if mentioning_reports.any?
-      mentioned_report = params[:id].to_i
       mentioning_reports.each do |mentioning_report|
         mention =  Mention.new(mentioned_report_id: mentioned_report, mentioning_report_id: mentioning_report)
         mention.save
@@ -24,7 +24,7 @@ class ReportsController < ApplicationController
     # # 言及先のチェック
     # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
     if Mention.where(mentioning_report_id: mentioned_report)
-      @mentioned_reports = Mention.where(mentioned_report_id: mentioned_report)
+      @mentioned_reports = Mention.where(mentioning_report_id: mentioned_report)
     end
   end
 
