@@ -15,15 +15,15 @@ class ReportsController < ApplicationController
     # # 本文にリンクがあればその組みを中間テーブルに保存する
     if mentioning_reports.any?
       mentioning_reports.each do |mentioning_report|
-        mention =  Mention.new(mentioned_report_id: @report.id, mentioning_report_id: mentioning_report)
+        mention =  Mention.new(mentioned: @report.id, mentioning: mentioning_report)
         mention.save
       end
     end
 
     # # 言及先のチェック
     # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
-    if Mention.where(mentioning_report_id: @report.id)
-      @mentioned_reports = Mention.where(mentioning_report_id: @report.id)
+    if Mention.where(mentioning: @report.id)
+      @mentioned_reports = Mention.where(mentioning: @report.id)
     end
   end
 
@@ -45,12 +45,12 @@ class ReportsController < ApplicationController
 
   def update
     if @report.update(report_params)
-      if  Mention.where(mentioned_report_id: @report.id).size > @report.mentioning.size
+      if  Mention.where(mentioned: @report.id).size > @report.mentioning.size
         # 中間テーブルに保存されているレコードから言及先の日報IDを取得する。
-        db_ids = Mention.where(mentioned_report_id: @report.id).map{|mention| mention.mentioning_report_id}
+        db_ids = Mention.where(mentioned: @report.id).map{|mention| mention.mentioning}
         deletable_items = db_ids - @report.mentioning
         deletable_items.each do |deletable_item|
-          foo = Mention.where(mentioned_report_id: @report.id, mentioning_report_id: deletable_item).first.id
+          foo = Mention.where(mentioned: @report.id, mentioning: deletable_item).first.id
           Mention.delete(foo)
         end
       end
