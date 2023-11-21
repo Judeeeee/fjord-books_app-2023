@@ -32,7 +32,7 @@ class Report < ApplicationRecord
       db_ids = Mention.where(mentioned_report_id: @report.id).map{|mention| mentoin.mentioning_report_id}
       deletable_items = db_ids - @report.mentioning
       # 結局idの情報だけ欲しいので、クラスインスタンスである必要はない。
-      deletable_items each do |deletable_item|
+      deletable_items.each do |deletable_item|
         foo = Mention.where(mentioned_report_id: @report.id, mentioning_report_id: deletable_item).id
         Mention.delete(foo)
       end
