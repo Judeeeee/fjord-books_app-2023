@@ -1,4 +1,5 @@
 class Mention < ApplicationRecord
-  has_many :reports, dependent: :destroy
-  validates_uniqueness_of :mentioned_report_id, scope: :mentioning_report_id
+  belongs_to :mentioned, class_name: "Report", foreign_key: :report_id
+  belongs_to :mentioning, class_name: "Report", foreign_key: :report_id
+  validates_uniqueness_of :mentioned, scope: :mentioning
 end
