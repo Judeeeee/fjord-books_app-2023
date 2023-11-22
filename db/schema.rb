@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_21_164540) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_22_092951) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -60,11 +60,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_21_164540) do
   end
 
   create_table "mentions", force: :cascade do |t|
-    t.integer "mentioned", null: false
-    t.integer "mentioning", null: false
+    t.integer "mentioned_id", null: false
+    t.integer "mentioning_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["mentioned", "mentioning"], name: "index_mentions_on_mentioned_and_mentioning", unique: true
+    t.index ["mentioned_id", "mentioning_id"], name: "index_mentions_on_mentioned_id_and_mentioning_id", unique: true
   end
 
   create_table "reports", force: :cascade do |t|
@@ -95,7 +95,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_21_164540) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "users"
-  add_foreign_key "mentions", "reports", column: "mentioned"
-  add_foreign_key "mentions", "reports", column: "mentioning"
+  add_foreign_key "mentions", "reports", column: "mentioned_id"
+  add_foreign_key "mentions", "reports", column: "mentioning_id"
   add_foreign_key "reports", "users"
 end
