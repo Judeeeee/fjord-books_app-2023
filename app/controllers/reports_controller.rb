@@ -30,10 +30,7 @@ class ReportsController < ApplicationController
     # # 言及元のレポートのリンク存在チェック
     # # 本文にリンクがあればその組みを中間テーブルに保存する
     if mentioning_reports.any?
-      mentioning_reports.each do |mentioning_report|
-        mention =  Mention.new(mentioned_id: @report.id, mentioning_id: mentioning_report)
-        mention.save
-      end
+        Mention.insert_mentons(mentioning_reports, @report)
     end
 
     if @report.save
