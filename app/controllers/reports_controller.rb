@@ -9,17 +9,6 @@ class ReportsController < ApplicationController
 
   def show
     @report = Report.find(params[:id])
-    mentioning_reports = @report.mentioning
-
-    # # 言及元のレポートのリンク存在チェック
-    # # 本文にリンクがあればその組みを中間テーブルに保存する
-    if mentioning_reports.any?
-      mentioning_reports.each do |mentioning_report|
-        mention =  Mention.new(mentioned_id: @report.id, mentioning_id: mentioning_report)
-        mention.save
-      end
-    end
-
     # # 言及先のチェック
     # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
     if Mention.where(mentioning_id: @report.id)
@@ -36,6 +25,17 @@ class ReportsController < ApplicationController
 
   def create
     @report = current_user.reports.new(report_params)
+    mentioning_reports = @report.mentioning
+
+    # # 言及元のレポートのリンク存在チェック
+    # # 本文にリンクがあればその組みを中間テーブルに保存する
+    if mentioning_reports.any?
+      mentioning_reports.each do |mentioning_report|
+        mention =  Mention.new(mentioned_id: @report.id, mentioning_id: mentioning_report)
+        mention.save
+      end
+    end
+
     if @report.save
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
