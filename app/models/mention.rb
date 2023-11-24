@@ -13,22 +13,27 @@ class Mention < ApplicationRecord
   def self.delete_mentions(report)
     # 中間テーブルに保存されているレコードから言及先の日報IDを取得する。
     mentioned_report_ids = Mention.where(mentioned_id: report.id).map{|mention| mention.mentioning_id}
+    updated_mentioned_report_ids = report.mentioning_report_links
 
-    # 配列サイズが違っていたら削除、同じだったら更新
-    if mentioned_report_ids.size == report.mentioning_report_links
-      # 更新
-      mentioned_report_ids.each do |mentioned_report_id|
-        update_target_report = Mention.where(mentioned_id: report.id, mentioning: mentioned_report_id).first.id
-        report.mentioning_report_links.each do |mentioning_report_link|
-          update_target_report.update(mentioning_id: mentioning_report_link)
+    add_ids = updated_mentioned_report_ids - mentioned_report_ids
+    del_ids = mentioned_report_ids - updated_mentioned_report_ids
+
+    #トランザクションを貼る
+    ActiveRecord::Base.transaction do
+      unless del_ids.empty?
+        # del_ids を使ってDELETE
+        del_ids.each do |del_id|
+          target_report = Mention.where(mentioned_id: report.id, mentioning: del_id).first.id
+          Mention.delete(target_report)
         end
       end
-    else
-      # 削除
-      delete_taeget_reports = mentioned_report_ids - report.mentioning_report_links
-      delete_taeget_reports.each do |delete_taeget_report|
-        report = Mention.where(mentioned_id: report.id, mentioning: delete_taeget_report).first.id
-        Mention.delete(report)
+
+      unless add_ids.empty?
+        # add_ids を使ってINSERT
+        add_ids.each do |add_id|
+          target_report = Mention.new(mentioned_id: report.id, mentioning: add_id)
+          target_report.save
+        end
       end
     end
   end
