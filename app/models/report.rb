@@ -17,7 +17,7 @@ class Report < ApplicationRecord
     created_at.to_date
   end
 
-  def mentioning
+  def mentioning_report_links
     report_links = self.content.scan(/http:\/\/localhost:3000\/reports\/(\d+)|^params[:id]/)
     report_links.flatten.map(&:to_i)
   end

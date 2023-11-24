@@ -25,7 +25,7 @@ class ReportsController < ApplicationController
 
   def create
     @report = current_user.reports.new(report_params)
-    mentioning_reports = @report.mentioning
+    mentioning_reports = @report.mentioning_report_links
 
     # # 言及元のレポートのリンク存在チェック
     # # 本文にリンクがあればその組みを中間テーブルに保存する
@@ -42,7 +42,7 @@ class ReportsController < ApplicationController
 
   def update
     if @report.update(report_params)
-      if  Mention.where(mentioned_id: @report.id).size > @report.mentioning.size
+      if  Mention.where(mentioned_id: @report.id).size > @report.mentioning_report_links.size
         Mention.delete_mentions(@report)
       end
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
