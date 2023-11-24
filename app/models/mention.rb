@@ -12,11 +12,11 @@ class Mention < ApplicationRecord
 
   def self.delete_mentions(report)
     # 中間テーブルに保存されているレコードから言及先の日報IDを取得する。
-    db_ids = Mention.where(mentioned_id: @report.id).map{|mention| mention.mentioning_id}
-    deletable_items = db_ids - @report.mentioning
-    deletable_items.each do |deletable_item|
-      foo = Mention.where(mentioned_id: @report.id, mentioning: deletable_item).first.id
-      Mention.delete(foo)
+    mentioned_report_ids = Mention.where(mentioned_id: report.id).map{|mention| mention.mentioning_id}
+    delete_taeget_reports = mentioned_report_ids - report.mentioning
+    delete_taeget_reports.each do |delete_taeget_report|
+      report = Mention.where(mentioned_id: report.id, mentioning: delete_taeget_report).first.id
+      Mention.delete(report)
     end
   end
 
