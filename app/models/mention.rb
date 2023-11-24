@@ -19,4 +19,8 @@ class Mention < ApplicationRecord
       Mention.delete(foo)
     end
   end
+
+  def self.links_update?(report)
+    self.where(mentioned_id: report.id).size > report.mentioning_report_links.size
+  end
 end

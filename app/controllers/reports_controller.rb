@@ -42,9 +42,7 @@ class ReportsController < ApplicationController
 
   def update
     if @report.update(report_params)
-      if  Mention.where(mentioned_id: @report.id).size > @report.mentioning_report_links.size
-        Mention.delete_mentions(@report)
-      end
+      Mention.delete_mentions(@report) if  Mention.links_update?(@report)
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
     else
       render :edit, status: :unprocessable_entity
