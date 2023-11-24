@@ -43,13 +43,7 @@ class ReportsController < ApplicationController
   def update
     if @report.update(report_params)
       if  Mention.where(mentioned_id: @report.id).size > @report.mentioning.size
-        # 中間テーブルに保存されているレコードから言及先の日報IDを取得する。
-        db_ids = Mention.where(mentioned_id: @report.id).map{|mention| mention.mentioning_id}
-        deletable_items = db_ids - @report.mentioning
-        deletable_items.each do |deletable_item|
-          foo = Mention.where(mentioned_id: @report.id, mentioning: deletable_item).first.id
-          Mention.delete(foo)
-        end
+        Mention.delete_mentions(@report)
       end
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
     else
