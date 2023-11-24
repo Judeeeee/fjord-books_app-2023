@@ -25,15 +25,16 @@ class ReportsController < ApplicationController
 
   def create
     @report = current_user.reports.new(report_params)
-    mentioning_reports = @report.mentioning_report_links
-
-    # # 言及元のレポートのリンク存在チェック
-    # # 本文にリンクがあればその組みを中間テーブルに保存する
-    if mentioning_reports.any?
-        Mention.insert_mentons(mentioning_reports, @report)
-    end
 
     if @report.save
+      mentioning_reports = @report.mentioning_report_links
+
+      # # 言及元のレポートのリンク存在チェック
+      # # 本文にリンクがあればその組みを中間テーブルに保存する
+      if mentioning_reports.any?
+          Mention.insert_mentons(mentioning_reports, @report)
+      end
+
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
       render :new, status: :unprocessable_entity
