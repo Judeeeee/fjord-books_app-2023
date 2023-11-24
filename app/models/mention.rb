@@ -23,7 +23,7 @@ class Mention < ApplicationRecord
       unless del_ids.empty?
         # del_ids を使ってDELETE
         del_ids.each do |del_id|
-          target_report = Mention.where(mentioned_id: report.id, mentioning: del_id).first.id
+          target_report = Mention.where(mentioned_id: report.id, mentioning_id: del_id).first.id
           Mention.delete(target_report)
         end
       end
@@ -31,7 +31,7 @@ class Mention < ApplicationRecord
       unless add_ids.empty?
         # add_ids を使ってINSERT
         add_ids.each do |add_id|
-          target_report = Mention.new(mentioned_id: report.id, mentioning: add_id)
+          target_report = Mention.new(mentioned_id: report.id, mentioning_id: add_id)
           target_report.save
         end
       end
