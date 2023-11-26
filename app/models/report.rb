@@ -19,6 +19,7 @@ class Report < ApplicationRecord
 
   def mentioning_report_links
     report_links = content.scan(%r{http://localhost:3000/reports/(\d+)|^params[:id]})
+    # NOTE: flatten.map(&:to_i) => flat_map(&:to_i) にできるかも
     report_links.flatten.map(&:to_i)
   end
 end
