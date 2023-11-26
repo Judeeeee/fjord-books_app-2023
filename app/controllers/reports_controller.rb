@@ -9,10 +9,8 @@ class ReportsController < ApplicationController
 
   def show
     @report = Report.find(params[:id])
-    # NOTE: where の返り値は常に truthy
     # # 言及先のチェック
     # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
-    return unless Mention.where(mentioning_id: @report.id)
 
     # NOTE: N+1 が起きているので要修正
     @mentioned_reports = Mention.where(mentioning_id: @report.id)
