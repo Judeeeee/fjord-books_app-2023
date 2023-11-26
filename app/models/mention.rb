@@ -42,7 +42,7 @@ class Mention < ApplicationRecord
 
   def self.links_update?(report)
     # 中間テーブルのレコードと本文のリンクに違いがあるときにtrueを返したい
-    mentioned_report_ids = where(mentioned_id: report.id).map.call(&:mentioning_id)
+    mentioned_report_ids = where(mentioned_id: report.id).map(&:mentioning_id)
     mentioned_report_ids != (report.mentioning_report_links)
   end
 end
