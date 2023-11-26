@@ -1,24 +1,26 @@
+# frozen_string_literal: true
+
 class Mention < ApplicationRecord
-  belongs_to :mentioned, class_name: "Report"
-  belongs_to :mentioning, class_name: "Report"
-  validates_uniqueness_of :mentioned, scope: :mentioning
+  belongs_to :mentioned, class_name: 'Report'
+  belongs_to :mentioning, class_name: 'Report'
+  validates :mentioned, uniqueness: { scope: :mentioning }
 
   def self.insert_mentons(mentioning_reports, report)
     mentioning_reports.each do |mentioning_report|
-      mention =  self.new(mentioned_id: report.id, mentioning_id: mentioning_report)
+      mention = new(mentioned_id: report.id, mentioning_id: mentioning_report)
       mention.save
     end
   end
 
   def self.delete_mentions(report)
     # 中間テーブルに保存されているレコードから言及先の日報IDを取得する。
-    mentioned_report_ids = Mention.where(mentioned_id: report.id).map{|mention| mention.mentioning_id}
+    mentioned_report_ids = Mention.where(mentioned_id: report.id).map(&:mentioning_id)
     updated_mentioned_report_ids = report.mentioning_report_links
 
     add_ids = updated_mentioned_report_ids - mentioned_report_ids
     del_ids = mentioned_report_ids - updated_mentioned_report_ids
 
-    #トランザクションを貼る
+    # トランザクションを貼る
     ActiveRecord::Base.transaction do
       unless del_ids.empty?
         # del_ids を使ってDELETE
@@ -40,7 +42,7 @@ class Mention < ApplicationRecord
 
   def self.links_update?(report)
     # 中間テーブルのレコードと本文のリンクに違いがあるときにtrueを返したい
-    mentioned_report_ids = self.where(mentioned_id: report.id).map{|mention| mention.mentioning_id}
+    mentioned_report_ids = where(mentioned_id: report.id).map.call(&:mentioning_id)
     mentioned_report_ids != (report.mentioning_report_links)
   end
 end

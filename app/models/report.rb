@@ -3,8 +3,8 @@
 class Report < ApplicationRecord
   belongs_to :user
   has_many :comments, as: :commentable, dependent: :destroy
-  has_many :mentioneds, class_name: "Mention", foreign_key: :mentioned_id, dependent: :destroy
-  has_many :mentionings, class_name: "Mention", foreign_key: :mentioning_id, dependent: :destroy
+  has_many :mentioneds, class_name: 'Mention', foreign_key: :mentioned_id, dependent: :destroy, inverse_of: :mentioned
+  has_many :mentionings, class_name: 'Mention', foreign_key: :mentioning_id, dependent: :destroy, inverse_of: :mentioned
 
   validates :title, presence: true
   validates :content, presence: true
@@ -18,7 +18,7 @@ class Report < ApplicationRecord
   end
 
   def mentioning_report_links
-    report_links = self.content.scan(/http:\/\/localhost:3000\/reports\/(\d+)|^params[:id]/)
+    report_links = content.scan(%r{http://localhost:3000/reports/(\d+)|^params[:id]})
     report_links.flatten.map(&:to_i)
   end
 end

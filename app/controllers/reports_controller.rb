@@ -11,9 +11,9 @@ class ReportsController < ApplicationController
     @report = Report.find(params[:id])
     # # 言及先のチェック
     # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
-    if Mention.where(mentioning_id: @report.id)
-      @mentioned_reports = Mention.where(mentioning_id: @report.id)
-    end
+    return unless Mention.where(mentioning_id: @report.id)
+
+    @mentioned_reports = Mention.where(mentioning_id: @report.id)
   end
 
   # GET /reports/new
@@ -31,9 +31,7 @@ class ReportsController < ApplicationController
 
       # # 言及元のレポートのリンク存在チェック
       # # 本文にリンクがあればその組みを中間テーブルに保存する
-      if mentioning_reports.any?
-          Mention.insert_mentons(mentioning_reports, @report)
-      end
+      Mention.insert_mentons(mentioning_reports, @report) if mentioning_reports.any?
 
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
@@ -43,7 +41,7 @@ class ReportsController < ApplicationController
 
   def update
     if @report.update(report_params)
-      Mention.delete_mentions(@report) if  Mention.links_update?(@report)
+      Mention.delete_mentions(@report) if Mention.links_update?(@report)
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
     else
       render :edit, status: :unprocessable_entity
