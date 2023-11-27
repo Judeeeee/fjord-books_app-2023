@@ -5,13 +5,9 @@ class Mention < ApplicationRecord
   belongs_to :mentioning, class_name: 'Report'
   validates :mentioned, uniqueness: { scope: :mentioning }
 
-  # NOTE: insert_all か upsert_all の方がパフォーマンスが良い。ただ修正しなくても良い
-  # NOTE: each => find_each
   def self.insert_mentons(mentioning_reports, report)
-    mentioning_reports.each do |mentioning_report|
-      # NOTE: create を使った方が良い
-      mention = new(mentioned_id: report.id, mentioning_id: mentioning_report)
-      mention.save
+    mentioning_reports.find_each do |mentioning_report|
+      self.create(mentioned_id: report.id, mentioning_id: mentioning_report)
     end
   end
 
