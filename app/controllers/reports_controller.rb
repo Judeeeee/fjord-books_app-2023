@@ -12,8 +12,8 @@ class ReportsController < ApplicationController
     # # 言及先のチェック
     # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
 
-    # NOTE: N+1 が起きているので要修正
-    @mentioned_reports = Mention.where(mentioning_id: @report.id)
+    mentioned_report_ids = Mention.where(mentioning_id: @report.id).map(&:mentioned_id)
+    @mentioned_reports = Report.where(id: mentioned_report_ids)
   end
 
   # GET /reports/new
