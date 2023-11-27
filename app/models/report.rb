@@ -22,4 +22,10 @@ class Report < ApplicationRecord
     # NOTE: flatten.map(&:to_i) => flat_map(&:to_i) にできるかも
     report_links.flatten.map(&:to_i)
   end
+
+    def links_update?
+      # 中間テーブルのレコードと本文のリンクに違いがあるときにtrueを返したい
+      mentioned_report_ids = Mention.where(mentioned_id: self.id).pluck(:mentioning_id)
+      mentioned_report_ids != (self.mentioning_report_links)
+    end
 end

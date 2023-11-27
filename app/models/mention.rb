@@ -38,11 +38,4 @@ class Mention < ApplicationRecord
       end
     end
   end
-
-  # NOTE: Mention.links_update? は report.links_update? にできそう
-  def self.links_update?(report)
-    # 中間テーブルのレコードと本文のリンクに違いがあるときにtrueを返したい
-    mentioned_report_ids = where(mentioned_id: report.id).pluck(:mentioning_id)
-    mentioned_report_ids != (report.mentioning_report_links)
-  end
 end
