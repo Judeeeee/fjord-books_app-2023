@@ -33,9 +33,7 @@ class Mention < ApplicationRecord
       unless add_ids.empty?
         # add_ids を使ってINSERT
         add_ids.each do |add_id|
-          # NOTE: create を使った方が良い
-          target_report = Mention.new(mentioned_id: report.id, mentioning_id: add_id)
-          target_report.save
+          Mention.create(mentioned_id: report.id, mentioning_id: add_id)
         end
       end
     end
