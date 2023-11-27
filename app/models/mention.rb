@@ -13,9 +13,8 @@ class Mention < ApplicationRecord
 
   # NOTE: 追加もしてるので、メソッド名に違和感
   def self.delete_mentions(report)
-    # NOTE: map(6:mentioning_id) => pluck(:mentioning_id)
     # 中間テーブルに保存されているレコードから言及先の日報IDを取得する。
-    mentioned_report_ids = Mention.where(mentioned_id: report.id).map(&:mentioning_id)
+    mentioned_report_ids = Mention.where(mentioned_id: report.id).pluck(:mentioning_id)
     updated_mentioned_report_ids = report.mentioning_report_links
 
     add_ids = updated_mentioned_report_ids - mentioned_report_ids
@@ -45,9 +44,8 @@ class Mention < ApplicationRecord
 
   # NOTE: Mention.links_update? は report.links_update? にできそう
   def self.links_update?(report)
-    # NOTE: map(&:mentioning_id) => pluck(:mentioning_id)
     # 中間テーブルのレコードと本文のリンクに違いがあるときにtrueを返したい
-    mentioned_report_ids = where(mentioned_id: report.id).map(&:mentioning_id)
+    mentioned_report_ids = where(mentioned_id: report.id).pluck(:mentioning_id)
     mentioned_report_ids != (report.mentioning_report_links)
   end
 end
