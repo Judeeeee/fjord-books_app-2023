@@ -25,9 +25,8 @@ class Mention < ApplicationRecord
       unless del_ids.empty?
         # del_ids を使ってDELETE
         del_ids.each do |del_id|
-          # NOTE: destroy を使った方が良い
           target_report = Mention.where(mentioned_id: report.id, mentioning_id: del_id).first.id
-          Mention.delete(target_report)
+          Mention.destroy(target_report)
         end
       end
 
