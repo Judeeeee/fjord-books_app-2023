@@ -9,9 +9,6 @@ class ReportsController < ApplicationController
 
   def show
     @report = Report.find(params[:id])
-    # # 言及先のチェック
-    # # 表示してある日報がどこかから言及されていたら、言及元のリンクを表示する
-
     mentioned_report_ids = Mention.where(mentioning_id: @report.id).map(&:mentioned_id)
     @mentioned_reports = Report.where(id: mentioned_report_ids)
   end
@@ -28,9 +25,6 @@ class ReportsController < ApplicationController
 
     if @report.save
       mentioning_reports = @report.mentioning_report_links
-
-      # # 言及元のレポートのリンク存在チェック
-      # # 本文にリンクがあればその組みを中間テーブルに保存する
       Mention.insert_mentons(mentioning_reports, @report) if mentioning_reports.any?
 
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
