@@ -11,8 +11,7 @@ class Mention < ApplicationRecord
     end
   end
 
-  # NOTE: 追加もしてるので、メソッド名に違和感
-  def self.delete_mentions(report)
+  def self.update_mentions(report)
     # 中間テーブルに保存されているレコードから言及先の日報IDを取得する。
     mentioned_report_ids = Mention.where(mentioned_id: report.id).pluck(:mentioning_id)
     updated_mentioned_report_ids = report.mentioning_report_links
