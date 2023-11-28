@@ -6,7 +6,7 @@ class Mention < ApplicationRecord
   validates :mentioned, uniqueness: { scope: :mentioning }
 
   def self.insert_mentons(mentioning_reports, report)
-    mentioning_reports.find_each do |mentioning_report|
+    mentioning_reports.each do |mentioning_report|
       create(mentioned_id: report.id, mentioning_id: mentioning_report)
     end
   end
