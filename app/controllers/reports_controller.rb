@@ -24,8 +24,8 @@ class ReportsController < ApplicationController
     @report = current_user.reports.new(report_params)
 
     if @report.save
-      mentioning_reports = @report.mentioning_report_links
-      Mention.insert_mentons(mentioning_reports, @report) if mentioning_reports.any?
+      mentioning_report_ids = @report.retrieve_report_link
+      Mention.insert_mentons(mentioning_report_ids, @report) if mentioning_report_ids.any?
 
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else

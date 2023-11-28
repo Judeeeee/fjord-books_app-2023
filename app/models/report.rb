@@ -17,13 +17,13 @@ class Report < ApplicationRecord
     created_at.to_date
   end
 
-  def mentioning_report_links
+  def retrieve_report_link
     report_links = content.scan(%r{http://localhost:3000/reports/(\d+)})
     report_links.flatten.map(&:to_i)
   end
 
   def links_update?
     mentioned_report_ids = Mention.where(mentioned_id: id).pluck(:mentioning_id)
-    mentioned_report_ids != mentioning_report_links
+    mentioned_report_ids != retrieve_report_link
   end
 end

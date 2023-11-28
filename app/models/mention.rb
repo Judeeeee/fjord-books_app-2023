@@ -5,15 +5,15 @@ class Mention < ApplicationRecord
   belongs_to :mentioning, class_name: 'Report'
   validates :mentioned, uniqueness: { scope: :mentioning }
 
-  def self.insert_mentons(mentioning_reports, report)
-    mentioning_reports.each do |mentioning_report|
-      create(mentioned_id: report.id, mentioning_id: mentioning_report)
+  def self.insert_mentons(mentioning_report_ids, report)
+    mentioning_report_ids.each do |mentioning_report_id|
+      create(mentioned_id: report.id, mentioning_id: mentioning_report_id)
     end
   end
 
   def self.update_mentions(report)
     mentioned_report_ids = where(mentioned_id: report.id).pluck(:mentioning_id)
-    updated_mentioned_report_ids = report.mentioning_report_links
+    updated_mentioned_report_ids = report.retrieve_report_link
 
     add_ids = updated_mentioned_report_ids - mentioned_report_ids
     del_ids = mentioned_report_ids - updated_mentioned_report_ids
