@@ -9,7 +9,7 @@
     <h2>この日報に言及している日報</h2>
     <% @mentioned_reports.each do | mentioned_report | %>
       <p><%= link_to mentioned_report.title, report_url(mentioned_report.id) %></p>
-    <%end%>
+    <% end %>
   <% end %>
 </div>
 
