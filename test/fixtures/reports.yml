@@ -1,11 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  user: one
-  title: MyString
-  content: MyText
+other_report:
+  id: 1
+  user_id: 4
+  title: 'Other Report'
+  content: 'Other Report'
+  created_at: 'Wed, 29 Nov 2023 09:39:52.889048000 JST +09:00'
 
-two:
-  user: two
-  title: MyString
-  content: MyText
+my_report:
+  id: 2
+  user_id: 3
+  title: 'My Report'
+  content: 'My Report'
+  created_at: 'Wed, 29 Nov 2023 09:39:52.889048000 JST +09:00'

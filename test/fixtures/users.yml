@@ -1,11 +1,29 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
+# User(id: integer, email: string, encrypted_password: string, reset_password_token: string, reset_password_sent_at: datetime, remember_created_at: datetime, created_at: datetime, updated_at: datetime, name: string, postal_code: string, address: string, self_introduction: text)
 # This model initially had no columns defined. If you add columns to the
 # model remove the "{}" from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+
+no_name_user:
+  id: 1
+  email: 'no_name_user@example.com'
+  encrypted_password: '$2a$12$neNs7vW0tkNAG//qI/.Nb.Pzxl0iuBw9d5JV78wExFUS19N87NWO6'
+  name: ''
+
+have_name_user:
+  id: 2
+  email: 'have_name_user@example.com'
+  encrypted_password: '$2a$12$neNs7vW0tkNAG//qI/.Nb.Pzxl0iuBw9d5JV78wExFUS19N87NWO6'
+  name: 'have_name_user'
+
+my_user:
+  id: 3
+  email: 'my_user@example.com'
+  encrypted_password: '$2a$12$neNs7vW0tkNAG//qI/.Nb.Pzxl0iuBw9d5JV78wExFUS19N87NWO6'
+  name: 'my_user'
+
+other_user:
+  id: 4
+  email: 'other_user@example.com'
+  encrypted_password: '$2a$12$neNs7vW0tkNAG//qI/.Nb.Pzxl0iuBw9d5JV78wExFUS19N87NWO6'
+  name: 'other_user'
