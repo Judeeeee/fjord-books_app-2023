@@ -24,9 +24,7 @@ class ReportsController < ApplicationController
     @report = current_user.reports.new(report_params)
 
     if @report.save
-      mentioning_report_ids = @report.retrieve_report_link
-      Mention.insert_mentons(mentioning_report_ids, @report) if mentioning_report_ids.any?
-
+      @report.update_mentions
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
       render :new, status: :unprocessable_entity
