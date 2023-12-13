@@ -19,14 +19,14 @@ class Mention < ApplicationRecord
     del_ids = mentioned_report_ids - updated_mentioned_report_ids
 
     ActiveRecord::Base.transaction do
-      unless del_ids.empty?
+      if del_ids.any?
         del_ids.each do |del_id|
           target_report = where(mentioned_id: report.id, mentioning_id: del_id).first.id
           destroy(target_report)
         end
       end
 
-      unless add_ids.empty?
+      if add_ids.any?
         add_ids.each do |add_id|
           create(mentioned_id: report.id, mentioning_id: add_id)
         end
