@@ -26,4 +26,27 @@ class Report < ApplicationRecord
     mentioned_report_ids = Mention.where(mentioned_id: id).pluck(:mentioning_id)
     mentioned_report_ids != retrieve_report_link
   end
+
+  def update_mentions
+    mentioned_report_ids = Mention.where(mentioned_id: self.id).pluck(:mentioning_id)
+    updated_mentioned_report_ids = self.retrieve_report_link
+
+    add_ids = updated_mentioned_report_ids - mentioned_report_ids
+    del_ids = mentioned_report_ids - updated_mentioned_report_ids
+
+    ActiveRecord::Base.transaction do
+      if del_ids.any?
+        del_ids.each do |del_id|
+          target_report = Mention.where(mentioned_id: self.id, mentioning_id: del_id).first.id
+          Mention.destroy(target_report)
+        end
+      end
+
+      if add_ids.any?
+        add_ids.each do |add_id|
+          Mention.create(mentioned_id: self.id, mentioning_id: add_id)
+        end
+      end
+    end
+  end
 end
