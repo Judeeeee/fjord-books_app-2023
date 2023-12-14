@@ -28,8 +28,8 @@ class Report < ApplicationRecord
   end
 
   def update_mentions
-    before_report_ids = Mention.where(mentioned_id: self.id).pluck(:mentioning_id)
-    after_report_ids = self.retrieve_report_link
+    before_report_ids = Mention.where(mentioned_id: id).pluck(:mentioning_id)
+    after_report_ids = retrieve_report_link
 
     add_report_ids = after_report_ids - before_report_ids
     del_report_ids = before_report_ids - after_report_ids
@@ -37,14 +37,14 @@ class Report < ApplicationRecord
     ActiveRecord::Base.transaction do
       if del_report_ids.any?
         del_report_ids.each do |del_report_id|
-          target_report = Mention.where(mentioned_id: self.id, mentioning_id: del_report_id).first.id
+          target_report = Mention.where(mentioned_id: id, mentioning_id: del_report_id).first.id
           Mention.destroy(target_report)
         end
       end
 
       if add_report_ids.any?
         add_report_ids.each do |add_report_id|
-          Mention.create(mentioned_id: self.id, mentioning_id: add_report_id)
+          Mention.create(mentioned_id: id, mentioning_id: add_report_id)
         end
       end
     end
