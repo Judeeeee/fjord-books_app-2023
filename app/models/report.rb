@@ -21,7 +21,7 @@ class Report < ApplicationRecord
   end
 
   def retrieve_report_link
-    report_links = content.scan(%r{http://localhost:3000/reports/(\d+)})
+    report_links = content.scan(%r{http://localhost:3000/reports/(\d+)}).uniq
     report_links.flatten.map(&:to_i)
   end
 
