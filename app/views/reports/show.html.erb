@@ -5,9 +5,9 @@
 </div>
 
 <div class="mentioned-reoprt">
-  <% if @mentioned_reports.any? %>
+  <% if @mentioning_reports.any? %>
     <h2>この日報に言及している日報</h2>
-    <% @mentioned_reports.each do | mentioned_report | %>
+    <% @mentioning_reports.each do | mentioned_report | %>
       <p><%= link_to mentioned_report.title, report_url(mentioned_report.id) %></p>
     <% end %>
   <% end %>
