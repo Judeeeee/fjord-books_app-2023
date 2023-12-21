@@ -38,8 +38,7 @@ class Report < ApplicationRecord
 
       if del_report_ids.any?
         del_report_ids.each do |del_report_id|
-          target_report = Mention.where(mentioned_id: del_report_id, mentioning_id: id).first.id
-          Mention.destroy!(target_report)
+          Mention.find_by(mentioned_id: del_report_id, mentioning_id: id).destroy!
         end
       end
 
