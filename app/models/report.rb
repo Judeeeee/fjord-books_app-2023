@@ -36,19 +36,17 @@ class Report < ApplicationRecord
     add_report_ids = after_report_ids - before_report_ids
     del_report_ids = before_report_ids - after_report_ids
 
-    ActiveRecord::Base.transaction do
       if del_report_ids.any?
         del_report_ids.each do |del_report_id|
           target_report = Mention.where(mentioned_id: del_report_id, mentioning_id: id).first.id
-          Mention.destroy(target_report)
+          Mention.destroy!(target_report)
         end
       end
 
       if add_report_ids.any?
         add_report_ids.each do |add_report_id|
-          Mention.create(mentioned_id: add_report_id, mentioning_id: id)
+          Mention.create!(mentioned_id: add_report_id, mentioning_id: id)
         end
       end
-    end
   end
 end
