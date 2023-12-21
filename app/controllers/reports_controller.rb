@@ -27,8 +27,8 @@ class ReportsController < ApplicationController
       @report.update_mentions
     end
     redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
-    rescue ActiveRecord::RecordInvalid
-      render :new, status: :unprocessable_entity
+  rescue ActiveRecord::RecordInvalid
+    render :new, status: :unprocessable_entity
   end
 
   def update
@@ -37,8 +37,8 @@ class ReportsController < ApplicationController
       @report.update_mentions if @report.need_to_update_mentionings?
     end
     redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
-    rescue ActiveRecord::RecordInvalid
-      render :edit, status: :unprocessable_entity
+  rescue ActiveRecord::RecordInvalid
+    render :edit, status: :unprocessable_entity
   end
 
   def destroy

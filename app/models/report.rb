@@ -36,16 +36,16 @@ class Report < ApplicationRecord
     add_report_ids = after_report_ids - before_report_ids
     del_report_ids = before_report_ids - after_report_ids
 
-      if del_report_ids.any?
-        del_report_ids.each do |del_report_id|
-          Mention.find_by(mentioned_id: del_report_id, mentioning_id: id).destroy!
-        end
+    if del_report_ids.any?
+      del_report_ids.each do |del_report_id|
+        Mention.find_by(mentioned_id: del_report_id, mentioning_id: id).destroy!
       end
+    end
 
-      if add_report_ids.any?
-        add_report_ids.each do |add_report_id|
-          Mention.create!(mentioned_id: add_report_id, mentioning_id: id)
-        end
-      end
+    return unless add_report_ids.any?
+
+    add_report_ids.each do |add_report_id|
+      Mention.create!(mentioned_id: add_report_id, mentioning_id: id)
+    end
   end
 end
