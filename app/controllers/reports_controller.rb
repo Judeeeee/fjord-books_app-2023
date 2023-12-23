@@ -24,7 +24,7 @@ class ReportsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @report.save!
-      @report.update_mentions
+      @report.update_mentions if @report.need_to_update_mentionings?
     end
     redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
   rescue ActiveRecord::RecordInvalid
