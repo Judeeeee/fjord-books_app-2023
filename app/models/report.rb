@@ -25,10 +25,6 @@ class Report < ApplicationRecord
     report_links.flatten.map(&:to_i)
   end
 
-  def need_to_update_mentionings?
-    mentionings.pluck(:mentioned_id) != retrieve_report_link
-  end
-
   def update_mentions!
     before_report_ids = mentionings.pluck(:mentioned_id)
     after_report_ids = retrieve_report_link
