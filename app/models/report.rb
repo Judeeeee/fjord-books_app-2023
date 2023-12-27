@@ -20,15 +20,10 @@ class Report < ApplicationRecord
     created_at.to_date
   end
 
-  def retrieve_report_link
-    report_links = content.scan(%r{http://localhost:3000/reports/(\d+)}).uniq
-    report_links.flatten.map(&:to_i)
-  end
-
   def update_mentions!
     before_report_ids = mentionings.pluck(:mentioned_id)
-    after_report_ids = retrieve_report_link
-
+    report_links = content.scan(%r{http://localhost:3000/reports/(\d+)}).uniq.flatten.map(&:to_i)
+    after_report_ids = report_links.select { |report_link| Report.exists?(report_link) }
     add_report_ids = after_report_ids - before_report_ids
     del_report_ids = before_report_ids - after_report_ids
 
@@ -41,7 +36,7 @@ class Report < ApplicationRecord
     return unless add_report_ids.any?
 
     add_report_ids.each do |add_report_id|
-      Mention.create!(mentioned_id: add_report_id, mentioning_id: id) if Report.find_by(id: add_report_id)
+      Mention.create!(mentioned_id: add_report_id, mentioning_id: id)
     end
   end
 end
