@@ -45,7 +45,7 @@ class Report < ApplicationRecord
     return unless add_report_ids.any?
 
     add_report_ids.each do |add_report_id|
-      Mention.create!(mentioned_id: add_report_id, mentioning_id: id)
+      Mention.create!(mentioned_id: add_report_id, mentioning_id: id) if Report.find_by(id: add_report_id)
     end
   end
 end
