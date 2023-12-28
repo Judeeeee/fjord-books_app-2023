@@ -23,7 +23,7 @@ class Report < ApplicationRecord
   def update_mentions!
     before_report_ids = mentionings.pluck(:mentioned_id)
     report_links = content.scan(%r{http://localhost:3000/reports/(\d+)}).uniq.flatten.map(&:to_i)
-    after_report_ids = report_links.select { |report_link| Report.exists?(report_link) }
+    after_report_ids = Report.where(id: report_links).pluck(:id)
     add_report_ids = after_report_ids - before_report_ids
     del_report_ids = before_report_ids - after_report_ids
 
