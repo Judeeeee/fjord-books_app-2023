@@ -16,7 +16,6 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   test '作成日時のフォーマットを変更する' do
-    #   my_user = users(:my_user)
     my_report = reports(:my_report)
     expect_date = Date.new(2023, 11, 29)
     assert_equal expect_date, my_report.created_on
