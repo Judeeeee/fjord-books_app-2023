@@ -13,3 +13,10 @@ my_report:
   title: 'My Report'
   content: 'My Report'
   created_at: 'Wed, 29 Nov 2023 09:39:52.889048000 JST +09:00'
+
+mentioning_report:
+  id: 3
+  user_id: 3
+  title: 'include other report link'
+  content: 'http://localhost:3000/reports/2'
+  created_at: 'Wed, 29 Nov 2023 09:39:52.889048000 JST +09:00'
