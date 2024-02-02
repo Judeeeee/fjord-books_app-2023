@@ -47,12 +47,12 @@ class ReportsTest < ApplicationSystemTestCase
   end
 
   test 'should destroy Report' do
-    assert_text 'My Report'
+    # 新たに日報を追加したため、日報の順序が入れ替わった。
+    assert_text 'include other report link'
     click_on 'この日報を表示', match: :first
-
     assert_selector 'h1', text: '日報の詳細'
     click_button 'この日報を削除'
     assert_text '日報が削除されました。'
-    assert_no_text 'My Report'
+    assert_no_text 'include other report link'
   end
 end
